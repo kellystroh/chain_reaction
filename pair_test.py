@@ -11,8 +11,8 @@ import pickle
 
 lemmatizer = WordNetLemmatizer()
 
-news = pd.read_csv('data/articles1.csv')
-news = news.iloc[10000:30000, :]
+news = pd.read_csv('data/articles3.csv')
+news = news.iloc[25000:, :]
 news['full_text'] = news.title.str.cat(news.content, sep='.')
 
 def row_counter(row):
@@ -76,6 +76,8 @@ def row_counter(row):
 
     # phrase_df = phrase_df[phrase_df.phrase.str.islower()]
 
+    phrase_df.to_csv('art3B.csv')
+
     phrases = phrase_df.phrase.values
     c = Counter(phrases)
     return c
@@ -90,5 +92,5 @@ for row in range(len(news)):
 
 
 
-with open('art1B.pickle', 'wb') as outputfile:
+with open('art3B.pickle', 'wb') as outputfile:
     pickle.dump(big_counter, outputfile)
