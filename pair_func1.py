@@ -11,8 +11,8 @@ import pickle
 
 lemmatizer = WordNetLemmatizer()
 
-news = pd.read_csv('data/articles2.csv')
-news = news.iloc[35000:, :]
+news = pd.read_csv('data/articles1.csv')
+news = news.iloc[:1000, :]
 news['full_text'] = news.title.str.cat(news.content, sep='.')
 
 def row_counter(row):
@@ -33,39 +33,37 @@ def row_counter(row):
     
     arr = np.array([word1_list, word2_list]).T
     phrase_df = pd.DataFrame(data=arr, columns=['w1', 'w2'])
-    phrase_df['combo'] = phrase_df.w1.str.cat(phrase_df.w2.values)
+    phrase_df['combo'] = phrase_df.w1.str.cat(phrase_df.w2.values, sep=' ')
     phrase_df = phrase_df[phrase_df.combo.str.isalpha()]
+    phrase_df = phrase_df[phrase_df.combo.str.islower()]
 
-    phrase_df['lower1'] = phrase_df.w1.str.lower()
-    phrase_df['lower2'] = phrase_df.w2.str.lower()
+    # phrase_df['lower1'] = phrase_df.w1.str.lower()
+    # phrase_df['lower2'] = phrase_df.w2.str.lower()
     
     stop_words = set(stopwords.words('english'))
 
-    phrase_df = phrase_df[~phrase_df.lower1.isin(stop_words)]
-    phrase_df = phrase_df[~phrase_df.lower2.isin(stop_words)]
-
-    ### phrase_df = phrase_df[~phrase_df.lower2.isin(stop_words)]
-    ### phrase_df = phrase_df[~phrase_df.lower2.isin(stop_words)]
+    phrase_df = phrase_df[~phrase_df.w1.isin(stop_words)]
+    phrase_df = phrase_df[~phrase_df.w2.isin(stop_words)]
 
     ### not sure whether to feed in w1/w2 OR lower1/lower2
-    phrase_df['lem1'] = phrase_df.lower1.apply(lambda x: lemmatizer.lemmatize(x))
-    phrase_df['lem2'] = phrase_df.lower2.apply(lambda x: lemmatizer.lemmatize(x))
+    # phrase_df['lem1'] = phrase_df.lower1.apply(lambda x: lemmatizer.lemmatize(x))
+    # phrase_df['lem2'] = phrase_df.lower2.apply(lambda x: lemmatizer.lemmatize(x))
 
-    phrase_df['phrase'] = phrase_df.lem1.str.cat(phrase_df.lem2, sep=' ')
+    # phrase_df['phrase'] = phrase_df.lem1.str.cat(phrase_df.lem2, sep=' ')
     
-    phrases = phrase_df.phrase.values
+    phrases = phrase_df.combo.values
     c = Counter(phrases)
     return c
 
 big_counter = Counter()
 for row in range(len(news)):
-    if row % 500 == 0:
-    #if row % 100 == 0:
+    # if row % 500 == 0:
+    if row % 100 == 0:
         print(row)
     rc = row_counter(row)
     big_counter += rc
 
 
 
-with open('group2b.pickle', 'wb') as outputfile:
+with open('pk_test.pickle', 'wb') as outputfile:
     pickle.dump(big_counter, outputfile)
