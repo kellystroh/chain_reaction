@@ -12,7 +12,7 @@ import pickle
 #lemmatizer = WordNetLemmatizer()
 
 news = pd.read_csv('data/articles1.csv')
-news = news.iloc[:1000, :]
+news = news.iloc[4000:10000, :]
 # news['full_text'] = news.title.str.cat(news.content, sep='.')
 
 def row_counter(row):
@@ -86,12 +86,12 @@ def row_counter(row):
 big_counter = Counter()
 for row in range(len(news)):
     # if row % 50 == 0:
-    if row % 1000 == 0:
+    if row % 500 == 0:
         print(row)
     rc = row_counter(row)
     big_counter += rc
 
 
 
-with open('count1A.pickle', 'wb') as outputfile:
+with open('count1B.pickle', 'wb') as outputfile:
     pickle.dump(big_counter, outputfile)
