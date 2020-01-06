@@ -33,9 +33,11 @@ def row_counter(row):
     
     arr = np.array([word1_list, word2_list]).T
     phrase_df = pd.DataFrame(data=arr, columns=['w1', 'w2'])
-    phrase_df['combo'] = phrase_df.w1.str.cat(phrase_df.w2.values)
+    #filter out any numbers or remaining punctuation
     phrase_df = phrase_df[phrase_df.w1.str.isalpha()]
     phrase_df = phrase_df[phrase_df.w2.str.isalpha()]
+
+    phrase_df['combo'] = phrase_df.w1.str.cat(phrase_df.w2.values)
 
     phrase_df = phrase_df[phrase_df.combo.str.islower()]
     
